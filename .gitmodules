@@ -1,0 +1,12 @@
+[submodule "inference-engine/3rd/ggml"]
+	path = inference-engine/3rd/ggml
+	url = https://github.com/ggerganov/ggml/
+[submodule "inference-engine/3rd/cnpy"]
+	path = inference-engine/3rd/cnpy
+	url = https://github.com/rogersce/cnpy
+[submodule "inference-engine/3rd/yaml"]
+	path = inference-engine/3rd/yaml
+	url = https://github.com/jbeder/yaml-cpp
+[submodule "asplos24-ae/end-to-end/baselines/cpu/ggml"]
+	path = asplos24-ae/end-to-end/baselines/cpu/ggml
+	url = https://github.com/ggerganov/ggml
