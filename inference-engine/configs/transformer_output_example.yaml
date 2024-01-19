@@ -1,0 +1,107 @@
+network_params:
+  # input size
+  seq_len: 512
+  batch_size: 64
+  # feature size
+  head_num: 16
+  head_dim: 64
+  token_dim: 1024
+  ffn_hidden_dim: 4096
+  layer_num: 24
+
+system_params:
+  # for dpu
+  dpu_num: 1024
+  nr_tasklets: 16
+  qkv_lut_pim_binary: "./build/bin/dpu_bin_qkv"
+  o_lut_pim_binary: "./build/bin/dpu_bin_o"
+  ffn1_lut_pim_binary: "./build/bin/dpu_bin_ffn1"
+  ffn2_lut_pim_binary: "./build/bin/dpu_bin_ffn2"
+  # for cpu
+  num_threads: 40
+
+kernel_params:
+  # for qkv lut
+  # LUT quantization factors, used for test
+  qkv_scale: 0.1
+  qkv_bias: 0.2
+  # amm params
+  qkv_num_codebook: 512
+  qkv_num_centroid: 16
+  # sub lut tiling params
+  qkv_input_parallelism: 32
+  qkv_lut_parallelism: 32
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  qkv_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  qkv_lut_load_type: 2
+  qkv_n_mtile_size: 64
+  qkv_feature_mtile_size: 32
+  qkv_cb_mtile_size: 128
+  qkv_feature_load_tile_size: 8
+  qkv_cb_load_tile_size: 128 
+
+  # for o lut
+  # LUT quantization factors, used for test
+  o_scale: 0.1
+  o_bias: 0.2
+  # amm params
+  o_num_codebook: 512
+  o_num_centroid: 16
+  # sub lut tiling params
+  o_input_parallelism: 64
+  o_lut_parallelism: 16 
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  o_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  o_lut_load_type: 2
+  o_n_mtile_size: 64
+  o_feature_mtile_size: 32
+  o_cb_mtile_size: 128
+  o_feature_load_tile_size: 8
+  o_cb_load_tile_size: 128
+
+  # for ffn1 lut
+  # LUT quantization factors, used for test
+  ffn1_scale: 0.1
+  ffn1_bias: 0.2
+  # amm params
+  ffn1_num_codebook: 512
+  ffn1_num_centroid: 16
+  # sub lut tiling params
+  ffn1_input_parallelism: 32
+  ffn1_lut_parallelism: 32
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  ffn1_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  ffn1_lut_load_type: 2
+  ffn1_n_mtile_size: 64
+  ffn1_feature_mtile_size: 32
+  ffn1_cb_mtile_size: 128
+  ffn1_feature_load_tile_size: 8
+  ffn1_cb_load_tile_size: 128
+
+  # for ffn2 lut
+  # for de-quantization
+  ffn2_scale: 0.1
+  ffn2_bias: 0.2
+  # amm params
+  # LUT quantization factors, used for test
+  ffn2_num_codebook: 2048
+  ffn2_num_centroid: 16
+  # sub lut tiling params
+  ffn2_input_parallelism: 64
+  ffn2_lut_parallelism: 16
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  ffn2_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  ffn2_lut_load_type: 2
+  ffn2_n_mtile_size: 64
+  ffn2_feature_mtile_size: 32
+  ffn2_cb_mtile_size: 128
+  ffn2_feature_load_tile_size: 8
+  ffn2_cb_load_tile_size: 128

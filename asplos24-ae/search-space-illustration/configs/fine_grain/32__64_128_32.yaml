@@ -1,0 +1,24 @@
+system_params:
+  num_threads: 40
+  dpu_num: 1024
+  nr_tasklets: 16
+
+amm_shape_params:
+  num_codebook: 256
+  num_centroid: 16
+  n: 32768
+  input_feature_len: 1024
+  output_feature_len: 4096
+  scale: 0.1
+  bias: 0.2
+
+kernel_params: 
+  loop_order: 0
+  lut_load_type: 1
+  n_stile_size: 512
+  feature_stile_size: 256
+  n_mtile_size: 64
+  feature_mtile_size: 32
+  cb_mtile_size: 128
+  feature_load_tile_size: 32
+  cb_load_tile_size: 0

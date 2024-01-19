@@ -1,0 +1,16 @@
+system_params:
+  # for cpu
+  num_threads: 40
+  # for dpu
+  dpu_num: 1024
+  nr_tasklets: 16
+
+amm_shape_params:
+  num_codebook: 256
+  num_centroid: 16
+  n: 32768
+  input_feature_len: 1024
+  output_feature_len: 4096
+  # LUT quantization factors, used for test
+  scale: 0.1
+  bias: 0.2

@@ -1,0 +1,139 @@
+network_params:
+  # input size
+  seq_len: 512
+  batch_size: 64
+  # feature size
+  head_num: 16
+  head_dim: 64
+  token_dim: 1024
+  ffn_hidden_dim: 4096
+  layer_num: 24
+
+system_params:
+  # for dpu
+  # should be equal to input_parallelism*lut_parallelism
+  dpu_num: 1024
+  nr_tasklets: 16
+  qkv_lut_pim_binary: "./build/bin/dpu_bin_qkv"
+  o_lut_pim_binary: "./build/bin/dpu_bin_o"
+  ffn1_lut_pim_binary: "./build/bin/dpu_bin_ffn1"
+  ffn2_lut_pim_binary: "./build/bin/dpu_bin_ffn2"
+  # for cpu
+  num_threads: 40
+
+kernel_params:
+  # for qkv lut
+  # for de-quantization
+  qkv_scale: 0.1
+  qkv_bias: 0.2
+  # amm params
+  # should be a factor of token_dim (input_feature_len)
+  qkv_num_codebook: 256 
+  qkv_num_centroid: 128
+  # sub lut tiling params
+  # should be a factor of seq_len*batch_size (n)
+  qkv_input_parallelism: 128 
+  # should be a factor of token_dim*3 (output_feature_len)
+  qkv_lut_parallelism: 8 
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  qkv_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  qkv_lut_load_type: 2
+  # should be a factor of seq_len*batch_size (n)
+  qkv_n_mtile_size: 64
+  # should be a factor of output_feature_len
+  qkv_feature_mtile_size: 16
+  # should be a factor of num_codebook
+  qkv_cb_mtile_size: 64
+  # should be a factor of feature_mtile_size
+  qkv_feature_load_tile_size: 16
+  # should be a factor of cb_mtile_size
+  qkv_cb_load_tile_size: 16
+
+  # for o lut
+  # for de-quantization
+  o_scale: 0.1
+  o_bias: 0.2
+  # amm params
+  # should be a factor of token_dim (input_feature_len)
+  o_num_codebook: 256 
+  o_num_centroid: 128
+  # sub lut tiling params
+  # should be a factor of seq_len*batch_size (n)
+  o_input_parallelism: 128 
+  # should be a factor of token_dim*3 (output_feature_len)
+  o_lut_parallelism: 8 
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  o_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  o_lut_load_type: 2
+  # should be a factor of seq_len*batch_size (n)
+  o_n_mtile_size: 64
+  # should be a factor of output_feature_len
+  o_feature_mtile_size: 16
+  # should be a factor of num_codebook
+  o_cb_mtile_size: 64
+  # should be a factor of feature_mtile_size
+  o_feature_load_tile_size: 16
+  # should be a factor of cb_mtile_size
+  o_cb_load_tile_size: 16 
+
+  # for ffn1 lut
+  # for de-quantization
+  ffn1_scale: 0.1
+  ffn1_bias: 0.2
+  # amm params
+  # should be a factor of token_dim (input_feature_len)
+  ffn1_num_codebook: 256 
+  ffn1_num_centroid: 128
+  # sub lut tiling params
+  # should be a factor of seq_len*batch_size (n)
+  ffn1_input_parallelism: 64
+  # should be a factor of token_dim*3 (output_feature_len)
+  ffn1_lut_parallelism: 16 
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  ffn1_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  ffn1_lut_load_type: 2
+  # should be a factor of seq_len*batch_size (n)
+  ffn1_n_mtile_size: 64
+  # should be a factor of output_feature_len
+  ffn1_feature_mtile_size: 16
+  # should be a factor of num_codebook
+  ffn1_cb_mtile_size: 64
+  # should be a factor of feature_mtile_size
+  ffn1_feature_load_tile_size: 16
+  # should be a factor of cb_mtile_size
+  ffn1_cb_load_tile_size: 16
+
+  # for ffn2 lut
+  # for de-quantization
+  ffn2_scale: 0.1
+  ffn2_bias: 0.2
+  # amm params
+  # should be a factor of token_dim (input_feature_len)
+  ffn2_num_codebook: 1024
+  ffn2_num_centroid: 128
+  # sub lut tiling params
+  # should be a factor of seq_len*batch_size (n)
+  ffn2_input_parallelism: 128 
+  # should be a factor of token_dim*3 (output_feature_len)
+  ffn2_lut_parallelism: 8
+  # micro kernel params
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  ffn2_loop_order: 0
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  ffn2_lut_load_type: 2
+  # should be a factor of seq_len*batch_size (n)
+  ffn2_n_mtile_size: 64
+  # should be a factor of output_feature_len
+  ffn2_feature_mtile_size: 16
+  # should be a factor of num_codebook
+  ffn2_cb_mtile_size: 64
+  # should be a factor of feature_mtile_size
+  ffn2_feature_load_tile_size: 16
+  # should be a factor of cb_mtile_size
+  ffn2_cb_load_tile_size: 16

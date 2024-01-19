@@ -1,0 +1,33 @@
+system_params:
+  # for cpu
+  num_threads: 40
+  # for dpu
+  dpu_num: 1024
+  nr_tasklets: 16
+
+amm_shape_params:
+  num_codebook: 256
+  num_centroid: 16
+  n: 32768
+  input_feature_len: 1024
+  output_feature_len: 4096
+  # LUT quantization factors, used for test
+  scale: 0.1
+  bias: 0.2
+
+kernel_params: 
+  # 0: nfc, 1: ncf, 2: fnc, 3: fcn, 4: cnf, 5: cfn
+  loop_order: 1
+  # 0: static lut table, 1: fine grain, 2: coarse grain
+  lut_load_type: 2
+  # sub lut tile
+  n_stile_size: 1024
+  feature_stile_size: 128
+  # micro kernel tile
+  n_mtile_size: 64
+  feature_mtile_size: 32
+  cb_mtile_size: 128
+  # for coarse grain lut
+  feature_load_tile_size: 8
+  cb_load_tile_size: 128
+
