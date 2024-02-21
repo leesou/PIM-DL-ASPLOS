@@ -20,6 +20,8 @@ extern "C" {
 // Struct declaration
 //
 
+#ifdef BERT_BASE
+
 ////////////////////////////////////// for bert base
 
 struct inference_params
@@ -41,66 +43,76 @@ struct transformer_hparams {
     }
 };
 
+#elif defined(BERT_LARGE)
+
 //////////////////////////////////////// for bert large
 
-// struct inference_params
-// {
-//     int32_t n_threads = 32;
-//     int32_t n_tokens = 512;
-//     int32_t n_batch = 64;
-// };
+struct inference_params
+{
+    int32_t n_threads = 32;
+    int32_t n_tokens = 512;
+    int32_t n_batch = 64;
+};
 
-// struct transformer_hparams {
-//     uint32_t n_embd  = 1024;
-//     uint32_t n_intermediate = 4096;
-//     uint32_t n_head  = 16;
-//     uint32_t n_layer = 1;
-//     uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
+struct transformer_hparams {
+    uint32_t n_embd  = 1024;
+    uint32_t n_intermediate = 4096;
+    uint32_t n_head  = 16;
+    uint32_t n_layer = 1;
+    uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
 
-//     bool operator!=(const transformer_hparams & other) const {
-//         return memcmp(this, &other, sizeof(transformer_hparams));
-//     }
-// };
+    bool operator!=(const transformer_hparams & other) const {
+        return memcmp(this, &other, sizeof(transformer_hparams));
+    }
+};
+
+#elif defined(VIT_HUGE)
 
 //////////////////////////////////////// for vit huge
 
-// struct inference_params
-// {
-//     int32_t n_threads = 32;
-//     int32_t n_tokens = 264;
-//     int32_t n_batch = 128;
-// };
+struct inference_params
+{
+    int32_t n_threads = 32;
+    int32_t n_tokens = 264;
+    int32_t n_batch = 128;
+};
 
-// struct transformer_hparams {
-//     uint32_t n_embd  = 1280;
-//     uint32_t n_intermediate = 5120;
-//     uint32_t n_head  = 16;
-//     uint32_t n_layer = 1;
-//     uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
+struct transformer_hparams {
+    uint32_t n_embd  = 1280;
+    uint32_t n_intermediate = 5120;
+    uint32_t n_head  = 16;
+    uint32_t n_layer = 1;
+    uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
 
-//     bool operator!=(const transformer_hparams & other) const {
-//         return memcmp(this, &other, sizeof(transformer_hparams));
-//     }
-// };
+    bool operator!=(const transformer_hparams & other) const {
+        return memcmp(this, &other, sizeof(transformer_hparams));
+    }
+};
 
-// struct inference_params
-// {
-//     int32_t n_threads = 32;
-//     int32_t n_tokens = 512;
-//     int32_t n_batch = 128;
-// };
+#else
 
-// struct transformer_hparams {
-//     uint32_t n_embd  = 1280;
-//     uint32_t n_intermediate = 5120;
-//     uint32_t n_head  = 16;
-//     uint32_t n_layer = 1;
-//     uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
+#define USE_INPUT_INFERENCE_PARAMS
 
-//     bool operator!=(const transformer_hparams & other) const {
-//         return memcmp(this, &other, sizeof(transformer_hparams));
-//     }
-// };
+struct inference_params
+{
+    int32_t n_threads = 32;
+    int32_t n_tokens = 512;
+    int32_t n_batch = 128;
+};
+
+struct transformer_hparams {
+    uint32_t n_embd  = 1280;
+    uint32_t n_intermediate = 5120;
+    uint32_t n_head  = 16;
+    uint32_t n_layer = 1;
+    uint32_t data_type = 2; // 0: FP32, 1: FP16, 2: Q8
+
+    bool operator!=(const transformer_hparams & other) const {
+        return memcmp(this, &other, sizeof(transformer_hparams));
+    }
+};
+
+#endif
 
 //
 // Struct declaration
@@ -198,7 +210,7 @@ struct ggml_tensor * randomize_tensor_normal(
 
 void quantize(ggml_tensor* original_tensor, ggml_tensor* quantized_tensor, ggml_type wtype);
 
-struct transformer_ctx* init_transformer_ctx();
+struct transformer_ctx* init_transformer_ctx(transformer_hparams& hparams);
 
 void free_transformer_ctx(transformer_ctx* ctx);
 

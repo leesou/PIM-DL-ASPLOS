@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <iostream>
 #include <vector>
+#include <string>
 
 #define WARMUP_ROUND 10
 #define RECORD_ROUND 20
@@ -12,19 +13,31 @@ int main(int argc, char** argv)
 {
     int64_t t_model_init_us = 0;
     int64_t t_model_init_start_us = ggml_time_us();
+
+    inference_params default_inference_params;
+    transformer_hparams default_transformer_hparams;
+#ifdef USE_INPUT_INFERENCE_PARAMS
+    std::string n_tokens_string = argv[1];
+    std::string n_batch_string = argv[2];
+    std::string n_embd_string = argv[3];
+    std::string n_head_string = argv[4];
+    default_inference_params.n_tokens = std::stoi(n_tokens_string);
+    default_inference_params.n_batch = std::stoi(n_batch_string);
+    default_transformer_hparams.n_embd = std::stoi(n_embd_string);
+    default_transformer_hparams.n_intermediate = std::stoi(n_embd_string) * 4;
+    default_transformer_hparams.n_head = std::stoi(n_head_string);
+#endif
+    std::cout << "n_threads " << default_inference_params.n_threads << ", n_tokens " << default_inference_params.n_tokens << ", n_batch " << default_inference_params.n_batch << std::endl;
+    std::cout << "n_embd " << default_transformer_hparams.n_embd << ", n_intermediate " << default_transformer_hparams.n_intermediate << ", n_head " << default_transformer_hparams.n_head << ", n_layer " << default_transformer_hparams.n_layer << ", data_type " << default_transformer_hparams.data_type << std::endl;
     // init transformer ctx
     transformer_ctx* tctx;
-    tctx = init_transformer_ctx();
+    tctx = init_transformer_ctx(default_transformer_hparams);
+    
     t_model_init_us = ggml_time_us() - t_model_init_start_us;
     std::cout << "transformer context init time is " << t_model_init_us / 1000000.0f << " s" << std::endl;
 
     struct random_normal_distribution rnd;
     init_random_normal_distribution(&rnd, 1337, 0.0f, 5.0f, -10.0f, +10.0f);
-
-    inference_params default_inference_params;
-    transformer_hparams default_transformer_hparams;
-    std::cout << "n_threads " << default_inference_params.n_threads << ", n_tokens " << default_inference_params.n_tokens << ", n_batch " << default_inference_params.n_batch << std::endl;
-    std::cout << "n_embd " << default_transformer_hparams.n_embd << ", n_intermediate " << default_transformer_hparams.n_intermediate << ", n_head " << default_transformer_hparams.n_head << ", n_layer " << default_transformer_hparams.n_layer << ", data_type " << default_transformer_hparams.data_type << std::endl;
 
     size_t compute_size = 1024ll*1024ll*1024ll*96ll;
     uint8_t * compute_addr = new uint8_t[compute_size];

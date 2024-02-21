@@ -105,11 +105,43 @@ target_link_libraries(transformer PRIVATE ggml ${BERT_EXTRA_LIBS})
 # Build binaries
 #
 
-set(PROFILE_TRANSFORMER TRUE)
+if(PROFILE_TRANSFORMER)
+    set(PROFILE_TRANSFORMER TRUE)
+else()
+    set(PROFILE_TRANSFORMER FALSE)
+endif()
+
+if(BERT_BASE)
+    set(BERT_BASE TRUE)
+else()
+    set(BERT_BASE FALSE)
+endif()
+
+if(BERT_LARGE)
+    set(BERT_LARGE TRUE)
+else()
+    set(BERT_LARGE FALSE)
+endif()
+
+if(VIT_HUGE)
+    set(VIT_HUGE TRUE)
+else()
+    set(VIT_HUGE FALSE)
+endif()
+
+
 
 add_executable(main main.cpp)
 target_link_libraries(main PRIVATE transformer ggml)
 if(PROFILE_TRANSFORMER)
-target_compile_definitions(main PUBLIC PROFILE_TRANSFORMER)
+    target_compile_definitions(main PUBLIC PROFILE_TRANSFORMER)
 endif()
+if(BERT_BASE)
+    target_compile_definitions(main PUBLIC BERT_BASE)
+elseif(BERT_LARGE)
+    target_compile_definitions(main PUBLIC BERT_LARGE)
+elseif(VIT_HUGE)
+target_compile_definitions(main PUBLIC VIT_HUGE)
+endif()
+
 

@@ -177,10 +177,11 @@ void quantize(ggml_tensor* original_tensor, ggml_tensor* quantized_tensor, ggml_
     }
 }
 
-transformer_ctx* init_transformer_ctx()
+transformer_ctx* init_transformer_ctx(transformer_hparams& hparams)
 {
     transformer_ctx* new_transformer = new transformer_ctx;
     transformer_model & model = new_transformer->model;
+    model.hparams = hparams;
 
     // select the data type of weight tensors
     ggml_type wtype = GGML_TYPE_COUNT;
